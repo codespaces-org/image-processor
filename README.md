@@ -3,9 +3,10 @@
 # Welcome to my humble image procecssing application.
 
 ### Instructions
-1. Make sure you have `node`, `typescript` and `git` installed on your machine.
-2. Run the application using the following command `npm run serve`.
-3. Go to `http://localhost:3000` to make sure the server ran successfully (You should see a text message `OK`).
+1. Make sure you have `node >= v12.13.0`, `typescript` and `git` installed on your machine.
+2. Run `npm install` to install the project dependencies.
+3. Run `npm run serve` to start the server.
+4. Go to `http://localhost:3000` to make sure the server ran successfully (You should see a text message `OK`).
 
 ### Endpoints available
 1. `/api/images`
