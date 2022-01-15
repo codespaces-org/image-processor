@@ -1,3 +1,4 @@
+[![Node.js CI](https://github.com/youssef1337/image-processor/actions/workflows/node.js.yml/badge.svg)](https://github.com/youssef1337/image-processor/actions/workflows/node.js.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Welcome to my humble image procecssing application.
