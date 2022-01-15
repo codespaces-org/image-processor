@@ -23,10 +23,11 @@ export default class ImageProcessor {
 
     if (!fileExists) {
       await sharp(this.image).resize(width, height).toFile(this.path);
-      this.image = fs.readFileSync(this.path);
     }
 
-    return this.image!;
+    const resizedImage = fs.readFileSync(this.path);
+    this.image = resizedImage;
+    return resizedImage;
   }
 
   async getMetaData(): Promise<sharp.Metadata> {

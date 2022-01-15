@@ -18,8 +18,8 @@ describe('test imageProcessor module', () => {
   it('tests the resize function', async (done) => {
     const imageProcessor = new ImageProcessor();
     await imageProcessor.initialize('udacity-logo.png');
-    await imageProcessor.resize(100, 100);
-    const imageMetadata = await sharp(imageProcessor.image).metadata();
+    const image = await imageProcessor.resize(100, 100);
+    const imageMetadata = await sharp(image).metadata();
     expect(imageMetadata.width).toBe(100);
     expect(imageMetadata.height).toBe(100);
     expect(imageProcessor.path).toBe(
