@@ -4,26 +4,21 @@ import ImageProcessor from '../../imageProcessor';
 
 const images = Router();
 
-images.get('/', (req: Request, res: Response) => {
+images.get('/', async (req: Request, res: Response) => {
   const imageName = req.query.name as string;
-  let image: Buffer | undefined;
   if (imageName) {
     const imageProcessor = new ImageProcessor();
-    imageProcessor.initialize(imageName);
-    const width = parseInt(req.query.width as string, 10);
-    const height = parseInt(req.query.hei1ght as string, 10);
-    image = imageProcessor.image;
-
-    if (width && height) {
-      imageProcessor.resize(width, height).then((image) => {
-        image = image;
-      });
+    try {
+      await imageProcessor.initialize(imageName);
+      const width = parseInt(req.query.width as string, 10);
+      const height = parseInt(req.query.height as string, 10);
+      if (width && height) {
+        await imageProcessor.resize(width, height);
+      }
+      res.sendFile(imageProcessor.path!);
+    } catch (err) {
+      res.status(404).send("POOF! That image doesn't exist!");
     }
-
-    res.writeHead(200, {
-      'Content-Type': `image/${imageProcessor.imageFormat}`,
-    });
-    res.end(image);
   } else {
     res.status(400).send('Image name is required');
   }

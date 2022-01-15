@@ -5,49 +5,40 @@ import * as fs from 'fs';
 
 export default class ImageProcessor {
   image: Buffer | undefined;
-  imageName: string | undefined;
-  imageFormat: string | undefined;
+  name: string | undefined;
+  format: string | undefined;
+  path: string | undefined;
 
   async initialize(imageName: string) {
-    try {
-      this.image = fs.readFileSync(imageName);
-      const format = (await this.getMetaData()).format;
-      this.imageName = imageName;
-      this.imageFormat = format;
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
+    this.path = `${__dirname}/images/${imageName}`;
+    this.image = fs.readFileSync(this.path);
+    const format = (await this.getMetaData()).format;
+    this.name = imageName.split('.')[0];
+    this.format = format;
   }
 
   async resize(width: number, height: number): Promise<Buffer> {
-    const path = `${__dirname}/public/images/${this.imageName}-${width}-${height}.${this.imageFormat}`;
-    const fileExists = await this.checkIfFileExists(path, width, height, this.imageFormat!);
+    this.path = `${__dirname}/images/${this.name}-${width}-${height}.${this.format}`;
+    const fileExists = await this.checkIfFileExists();
 
     if (!fileExists) {
-      await sharp(this.image)
-        .resize(width, height)
-        .toFile(path);
+      await sharp(this.image).resize(width, height).toFile(this.path);
+      this.image = fs.readFileSync(this.path);
     }
 
-    return fs.readFileSync(path);
+    return this.image!;
   }
 
   async getMetaData(): Promise<sharp.Metadata> {
-    try {
-      const metaData = await sharp(this.image).metadata();
-      return metaData;
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
+    const metaData = await sharp(this.image).metadata();
+    return metaData;
   }
 
-  async checkIfFileExists(path: string, width: number, height: number, format: string) {
+  async checkIfFileExists(): Promise<Boolean> {
     try {
-      await fs.promises.access(path, fs.constants.F_OK);
+      await fs.promises.access(this.path!, fs.constants.F_OK);
       return true;
-    } catch (err) {
+    } catch (_) {
       return false;
     }
   }
