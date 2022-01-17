@@ -11,17 +11,17 @@ describe('Test endpoint responses', () => {
     done();
   });
 
-  it('gets the original image when requested without width and height', async (done) => {
-    const response = await request.get('/api/images?name=udacity-logo.png');
-    const imageMetadata = await sharp(response.body).metadata();
-    expect(response.status).toBe(200);
-    expect(imageMetadata.width).toBe(400);
-    expect(imageMetadata.height).toBe(400);
+  it("returns 400 and an error message when query params aren't sent", async (done) => {
+    const response = await request.get('/api/images?name=test.png');
+    expect(response.status).toBe(400);
+    expect(response.text).toBe('Please provide a name, width, and height');
     done();
   });
 
   it('returns 404 and an error message when the image is not found', async (done) => {
-    const response = await request.get('/api/images?name=test.png');
+    const response = await request.get(
+      '/api/images?name=test.png&width=400&height=400'
+    );
     expect(response.status).toBe(404);
     expect(response.text).toBe("POOF! That image doesn't exist!");
     done();
